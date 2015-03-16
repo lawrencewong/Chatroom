@@ -4,9 +4,11 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 
 public class Connection {
@@ -59,7 +61,12 @@ public class Connection {
 		connectbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmTheChatroom.setVisible(false);
-				Client testClient = new Client(iptextfield.getText(), usernametextfield.getText());
+				try {
+					Client testClient = new Client(iptextfield.getText(), usernametextfield.getText());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		

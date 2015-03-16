@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 
 public class Client {
@@ -25,27 +26,28 @@ public class Client {
 	private JTextArea generalChat;
 	private CommunicationServer comServer;
 	
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Client window = new Client(args[0],args[1]);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//
+//	/**
+//	 * Launch the application.
+//	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Client window = new Client(args[0],args[1]);
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public Client(String ipAddress, String clientName) {
+	public Client(String ipAddress, String clientName) throws IOException {
 		initialize(ipAddress, clientName);
 		comServer = new CommunicationServer(generalChat);
 	}
