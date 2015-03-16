@@ -21,7 +21,7 @@ public class Privatechat {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Privatechat window = new Privatechat();
+					Privatechat window = new Privatechat(args[0]);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,24 +33,26 @@ public class Privatechat {
 	/**
 	 * Create the application.
 	 */
-	public Privatechat() {
-		initialize();
+	public Privatechat(String username) {
+		initialize(username);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(String username) {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 557);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel label = new JLabel("Chatting with");
+		JLabel label = new JLabel("Chatting with " + username);
 		label.setBounds(10, 11, 414, 14);
 		frame.getContentPane().add(label);
 		
 		textField = new JTextField();
+		textField.setEditable(false);
 		textField.setBounds(10, 35, 414, 389);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
@@ -66,5 +68,6 @@ public class Privatechat {
 		});
 		btnNewButton.setBounds(329, 436, 95, 71);
 		frame.getContentPane().add(btnNewButton);
+		frame.setVisible(true);
 	}
 }

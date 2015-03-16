@@ -58,7 +58,6 @@ public class Connection {
 		connectbutton.setBounds(68, 224, 288, 26);
 		connectbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("IP: " + iptextfield.getText() + " Username: " + usernametextfield.getText());
 				frmTheChatroom.setVisible(false);
 				Client testClient = new Client(iptextfield.getText(), usernametextfield.getText());
 			}
