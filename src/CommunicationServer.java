@@ -31,15 +31,10 @@ public class CommunicationServer {
 	public class InThread extends Thread{
 		
 		public void run(){
-			System.out.println("My Thread is running");
-			clientGeneralChat.append("APPPENED FROM CS");
-			
-			//System.out.println("CS: " + clientGeneralChat.getText());
 			byte[] receiveData = new byte[1024];
 			
 			while(true){
 				
-			
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				try {
 					clientSocket.receive(receivePacket);
@@ -48,8 +43,7 @@ public class CommunicationServer {
 					e.printStackTrace();
 				}
 				String modifiedSentence = new String(receivePacket.getData());
-				System.out.println("FROM SERVER:" + modifiedSentence);
-				clientGeneralChat.append(modifiedSentence);
+				clientGeneralChat.append(modifiedSentence+"\n");
 			}
 		}
 	}

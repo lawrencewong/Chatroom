@@ -77,7 +77,7 @@ public class Client {
 		generalChatSend.setBounds(328, 447, 130, 35);
 		frame.getContentPane().add(generalChatSend);
 		
-		DefaultListModel<String> usernameListModel = new DefaultListModel<String>();
+		final DefaultListModel<String> usernameListModel = new DefaultListModel<String>();
 		usernameListModel.addElement(clientName);
 				
 		JList<String> usernameList = new JList<String>(usernameListModel);
