@@ -22,6 +22,9 @@ public class Client {
 
 	private JFrame frame;
 	private JTextField generalChatMessage;
+	private JTextArea generalChat;
+	private CommunicationServer comServer;
+	
 
 	/**
 	 * Launch the application.
@@ -44,6 +47,7 @@ public class Client {
 	 */
 	public Client(String ipAddress, String clientName) {
 		initialize(ipAddress, clientName);
+		comServer = new CommunicationServer(generalChat);
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class Client {
 		lblChatroom.setBounds(10, 3, 113, 35);
 		frame.getContentPane().add(lblChatroom);
 		
-		JTextArea generalChat = new JTextArea();
+		generalChat = new JTextArea("");
 		generalChat.setEditable(false);
 		generalChat.setBounds(10, 49, 448, 368);
 		frame.getContentPane().add(generalChat);
@@ -77,6 +81,13 @@ public class Client {
 		generalChatMessage.setColumns(10);
 		
 		JButton generalChatSend = new JButton("Send");
+		generalChatSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				sendMessage(generalChatMessage.getText());
+				generalChatMessage.setText("");
+			}
+		});
 		generalChatSend.setBounds(328, 447, 130, 35);
 		frame.getContentPane().add(generalChatSend);
 		
@@ -104,5 +115,10 @@ public class Client {
 		frame.getContentPane().add(btnNewButton);
 		frame.setVisible(true);
 		
+	}
+	
+	private void sendMessage(String message){
+		System.out.println(message);
+		comServer.getClientMessage(message);
 	}
 }

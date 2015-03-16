@@ -51,7 +51,7 @@ public class Connection {
 		frmTheChatroom.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Welcome to The Chatroom, please enter the server IP:");
-		lblNewLabel.setBounds(68, 0, 288, 52);
+		lblNewLabel.setBounds(68, 0, 352, 52);
 		frmTheChatroom.getContentPane().add(lblNewLabel);
 		
 		JButton connectbutton = new JButton("Connect");
@@ -80,5 +80,4 @@ public class Connection {
 		usernametextfield.setColumns(10);
 		frmTheChatroom.getContentPane().add(connectbutton);
 	}
-
 }
