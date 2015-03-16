@@ -26,22 +26,6 @@ public class Client {
 	private JTextArea generalChat;
 	private CommunicationServer comServer;
 	
-//
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Client window = new Client(args[0],args[1]);
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create the application.
@@ -49,7 +33,7 @@ public class Client {
 	 */
 	public Client(String ipAddress, String clientName) throws IOException {
 		initialize(ipAddress, clientName);
-		comServer = new CommunicationServer(generalChat);
+		comServer = new CommunicationServer(generalChat, ipAddress);
 	}
 
 	/**

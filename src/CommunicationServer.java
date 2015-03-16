@@ -8,31 +8,24 @@ public class CommunicationServer {
 	InThread inThread = new InThread();
 	OutThread outThread =  new OutThread();
 	private JTextArea clientGeneralChat;
+	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+	DatagramSocket clientSocket = new DatagramSocket();
+	InetAddress IPAddress;
+	private String outMessage = "";
 	
 	
+	public CommunicationServer(JTextArea generalChat, String ipAddress) throws IOException{
 	
-	public CommunicationServer(JTextArea generalChat) throws IOException{
-	
-		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-		DatagramSocket clientSocket = new DatagramSocket();
-		InetAddress IPAddress = InetAddress.getByName("localhost");
-		byte[] sendData = new byte[1024];
-		byte[] receiveData = new byte[1024];
-		String sentence = inFromUser.readLine();
-		sendData = sentence.getBytes();
-		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
-		clientSocket.send(sendPacket);
-		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		clientSocket.receive(receivePacket);
-		String modifiedSentence = new String(receivePacket.getData());
-		System.out.println("FROM SERVER:" + modifiedSentence);
-		clientSocket.close();
-		      
+		IPAddress  = InetAddress.getByName(ipAddress);
 		clientGeneralChat = generalChat;
+		outThread.start();
 		inThread.start();
+		
 	}
 	public void getClientMessage(String message){
 		System.out.println("CS " + message);
+		outMessage = message;
+		outThread.run();
 	}
 	
 	public class InThread extends Thread{
@@ -41,14 +34,44 @@ public class CommunicationServer {
 			System.out.println("My Thread is running");
 			clientGeneralChat.append("APPPENED FROM CS");
 			
-			System.out.println("CS: " + clientGeneralChat.getText());
+			//System.out.println("CS: " + clientGeneralChat.getText());
+			byte[] receiveData = new byte[1024];
+			
+			while(true){
+				
+			
+				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+				try {
+					clientSocket.receive(receivePacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String modifiedSentence = new String(receivePacket.getData());
+				System.out.println("FROM SERVER:" + modifiedSentence);
+				clientGeneralChat.append(modifiedSentence);
+			}
 		}
 	}
 	
 	public class OutThread extends Thread{
 		
 		public void run(){
-			
+			if(!outMessage.equals("")){
+				byte[] sendData = new byte[1024];
+				
+				//String sentence = "Hello Server!";
+
+				sendData = outMessage.getBytes();
+				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+				try {
+					clientSocket.send(sendPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				outMessage = "";
+			}
 		}
 	}
 }
