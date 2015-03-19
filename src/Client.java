@@ -85,7 +85,7 @@ public class Client {
 		generalChatSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				sendMessage(generalChatMessage.getText(), clientName);
+				sendMessage(generalChatMessage.getText(), clientName, null, "GC");
 				generalChatMessage.setText("");
 			}
 		});
@@ -104,11 +104,12 @@ public class Client {
 		label.setBounds(10, 505, 618, 14);
 		frame.getContentPane().add(label);
 		
-		JButton btnNewButton = new JButton("Start Private Chat");
+		JButton btnNewButton = new JButton("Send Private Message");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(usernameList.getSelectedValue() != null && usernameList.getSelectedValue() != clientName){
-					Privatechat privatechat = new Privatechat(usernameList.getSelectedValue());
+				if(usernameList.getSelectedValue() != null && !(usernameList.getSelectedValue().equals(clientName))){
+					sendMessage(generalChatMessage.getText(), clientName,  usernameList.getSelectedValue(), "PC");
+					generalChatMessage.setText("");
 				}
 			}
 		});
@@ -118,8 +119,11 @@ public class Client {
 		
 	}
 	
-	private void sendMessage(String message, String clientName){
+	private void sendMessage(String message, String clientName, String targetClient, String messageType){
 		System.out.println(message);
-		comServer.getClientMessage(message, clientName);
+		if(messageType.equals("PC")){
+			generalChat.append("PRIVATE MESSAGE TO " + targetClient + " - " + message +"\n");
+		}
+		comServer.getClientMessage(message, clientName, targetClient, messageType);
 	}
 }

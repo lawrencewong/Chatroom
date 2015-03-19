@@ -28,13 +28,13 @@ public class CommunicationServer {
 		inThread.start();
 		
 	}
-	public void getClientMessage(String message, String username){
+	public void getClientMessage(String message, String username, String target, String messageType){
 		System.out.println("CS " + message);
 		messageOBJ outPacket = new messageOBJ();
 		outPacket.setMessageOBJMessage(message);
 		outPacket.setUsernameOBJMessage(username);
-		outPacket.setTargetOBJMessage(null);
-		outPacket.setTypeOBJMessage("GC");
+		outPacket.setTargetOBJMessage(target);
+		outPacket.setTypeOBJMessage(messageType);
 		outMessage = outPacket;
 		outThread.run();
 	}
@@ -103,6 +103,8 @@ public class CommunicationServer {
                 	} else if (receiveMessage.getTypeOBJMessage().equals("LO")){
                 		clientModel.removeElement(receiveMessage.getUsernameOBJMessage());
                 		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " has logged out.\n");
+                	} else if(receiveMessage.getTypeOBJMessage().equals("PC")){
+                		clientGeneralChat.append("PRIVATE MESSAGE FROM " + receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
                 	}
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();

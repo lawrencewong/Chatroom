@@ -35,12 +35,11 @@ public class Server {
                 	System.out.println("Message: " + receiveMessageOBJ.getMessageOBJMessage());
                 	System.out.println("TARGET: " + receiveMessageOBJ.getTargetOBJMessage() );
                 	System.out.println("TYPE: " + receiveMessageOBJ.getTypeOBJMessage() );
+                	inClient.setUsernameCI(receiveMessageOBJ.getUsernameOBJMessage());
+            		inClient.setIPCI(IPAddress);
+            		inClient.setPortCI(port);
                 	// IF LOG IN
                 	if( receiveMessageOBJ.getTypeOBJMessage().equals("LN")){
-                		inClient.setUsernameCI(receiveMessageOBJ.getUsernameOBJMessage());
-//                		tempClientInfo.setUsernameCI("EE");
-                		inClient.setIPCI(IPAddress);
-                		inClient.setPortCI(port);
                     	clientInfoList.add(inClient);
                     	currentUsersList(inClient);
             		}
@@ -84,6 +83,22 @@ public class Server {
 							e.printStackTrace();
 						}
 					}
+				}else if(receiveMessageOBJ.getTypeOBJMessage().equals("PC")){
+					System.out.println("PRIVATE CHAT TOO: " + receiveMessageOBJ.getTargetOBJMessage());
+					for( int i =0; i < clientInfoList.size(); i++){
+						if(receiveMessageOBJ.getTargetOBJMessage().equals( clientInfoList.get(i).getUsernameCI()) ){
+							DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clientInfoList.get(i).getIPCI(), clientInfoList.get(i).getPortCI());
+							try {
+								serverSocket.send(sendPacket);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							System.out.println("DONE PC");
+							break;
+						}
+					}
+					
 				}
 				receiveMessageOBJ = null;
 				inClient = null;
