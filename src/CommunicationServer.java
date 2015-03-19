@@ -99,6 +99,8 @@ public class CommunicationServer {
                 	} else if(receiveMessage.getTypeOBJMessage().equals("UL")){
                 		System.out.println("ADDING " + receiveMessage.getMessageOBJMessage());
                 		clientModel.addElement(receiveMessage.getMessageOBJMessage());
+                	} else if (receiveMessage.getTypeOBJMessage().equals("LO")){
+                		clientModel.removeElement(receiveMessage.getUsernameOBJMessage());
                 	}
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();

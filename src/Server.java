@@ -43,7 +43,8 @@ public class Server {
                 		inClient.setPortCI(port);
                     	clientInfoList.add(inClient);
                     	currentUsersList(inClient);
-            		}else if(receiveMessageOBJ.getTypeOBJMessage().equals("LO")){
+            		}
+                	else if(receiveMessageOBJ.getTypeOBJMessage().equals("LO")){
             			for(int i = 0; i < clientInfoList.size(); i++){
             				if(clientInfoList.get(i).getUsernameCI().equals(receiveMessageOBJ.getUsernameOBJMessage())){
             					 clientInfoList.remove(i);
@@ -51,22 +52,9 @@ public class Server {
             			}
             		}
                 	
-                	// Find client
-//                	if(receiveMessageOBJ.getTypeOBJMessage().equals("GC")){
-//                		
-//	                	for(int i = 0; i < clientInfoList.size(); i++){
-//	                		if(clientInfoList.get(i).getUsernameCI().equals(receiveMessageOBJ.getUsernameOBJMessage())){
-//	                			tempClientInfo = clientInfoList.get(i);
-//	                			break;
-//	                		}
-//	                	}
-//                	}
-                	
-                
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();
                 }
-                
                 
                 
                 	
@@ -85,7 +73,7 @@ public class Server {
 					e1.printStackTrace();
 				}
 				sendData = outputStream.toByteArray();
-				if(receiveMessageOBJ.getTypeOBJMessage().equals("LN") || receiveMessageOBJ.getTypeOBJMessage().equals("GC")){
+				if(receiveMessageOBJ.getTypeOBJMessage().equals("LN") || receiveMessageOBJ.getTypeOBJMessage().equals("GC") || receiveMessageOBJ.getTypeOBJMessage().equals("LO")){
 					System.out.println("BROADCASTING");
 					for(int i = 0; i < clientInfoList.size(); i++){
 						DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clientInfoList.get(i).getIPCI(), clientInfoList.get(i).getPortCI());
