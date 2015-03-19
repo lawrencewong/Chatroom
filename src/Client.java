@@ -96,7 +96,7 @@ public class Client {
 		JButton btnNewButton = new JButton("Start Private Chat");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(usernameList.getSelectedValue() != null){
+				if(usernameList.getSelectedValue() != null && usernameList.getSelectedValue() != clientName){
 					Privatechat privatechat = new Privatechat(usernameList.getSelectedValue());
 				}
 			}
