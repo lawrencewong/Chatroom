@@ -96,11 +96,13 @@ public class CommunicationServer {
                 		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
                 	} else if(receiveMessage.getTypeOBJMessage().equals("LN") && !(receiveMessage.getUsernameOBJMessage().equals(clientName))){
                 		clientModel.addElement(receiveMessage.getUsernameOBJMessage());
+                		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " has logged in.\n");
                 	} else if(receiveMessage.getTypeOBJMessage().equals("UL")){
                 		System.out.println("ADDING " + receiveMessage.getMessageOBJMessage());
                 		clientModel.addElement(receiveMessage.getMessageOBJMessage());
                 	} else if (receiveMessage.getTypeOBJMessage().equals("LO")){
                 		clientModel.removeElement(receiveMessage.getUsernameOBJMessage());
+                		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " has logged out.\n");
                 	}
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();
