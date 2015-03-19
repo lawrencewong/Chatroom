@@ -5,11 +5,13 @@ public class messageOBJ implements Serializable{
 	private String message;
 	private String username;
 	private String target;
+	private String typeOfMessage;
 	
 	public messageOBJ(){
 		message = null;
 		username = null;
 		target = null;
+		typeOfMessage = null;
 	}
 	
 	public void setMessageOBJMessage(String clientMessage){
@@ -24,6 +26,10 @@ public class messageOBJ implements Serializable{
 		target = clientTarget;
 	}
 	
+	public void setTypeOBJMessage(String messageType){
+		typeOfMessage = messageType;
+	}
+	
 	public String getMessageOBJMessage(){
 		return message;
 	}
@@ -34,5 +40,9 @@ public class messageOBJ implements Serializable{
 	
 	public String getTargetOBJMessage(){
 		return target;
+	}
+	
+	public String getTypeOBJMessage(){
+		return typeOfMessage;
 	}
 }

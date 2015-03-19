@@ -28,6 +28,17 @@ public class CommunicationServer {
 		outPacket.setMessageOBJMessage(message);
 		outPacket.setUsernameOBJMessage(username);
 		outPacket.setTargetOBJMessage(null);
+		outPacket.setTypeOBJMessage("GC");
+		outMessage = outPacket;
+		outThread.run();
+	}
+	
+	public void loginToChatroom(String username){
+		messageOBJ outPacket = new messageOBJ();
+		outPacket.setMessageOBJMessage(null);
+		outPacket.setUsernameOBJMessage(username);
+		outPacket.setTargetOBJMessage(null);
+		outPacket.setTypeOBJMessage("LN");
 		outMessage = outPacket;
 		outThread.run();
 	}
@@ -62,6 +73,7 @@ public class CommunicationServer {
                 	System.out.println("USERNAME: " + receiveMessage.getUsernameOBJMessage());
                 	System.out.println("Message: " + receiveMessage.getMessageOBJMessage());
                 	System.out.println("TARGET: " + receiveMessage.getTargetOBJMessage() );
+                	System.out.println("TYPE: " + receiveMessage.getTypeOBJMessage() );
                 	clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();

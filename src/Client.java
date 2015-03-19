@@ -35,10 +35,7 @@ public class Client {
 	public Client(String ipAddress, String clientName) throws IOException {
 		initialize(ipAddress, clientName);
 		comServer = new CommunicationServer(generalChat, ipAddress);
-		
-		
-		
-		
+		comServer.loginToChatroom(clientName);
 	}
 
 	/**
