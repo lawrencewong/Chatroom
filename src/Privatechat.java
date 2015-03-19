@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 public class Privatechat {
 
 	private JFrame frame;
-	private JTextField textField;
 
 //	/**
 //	 * Launch the application.
@@ -51,12 +50,6 @@ public class Privatechat {
 		label.setBounds(10, 11, 414, 14);
 		frame.getContentPane().add(label);
 		
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(10, 35, 414, 389);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
-		
 		JTextArea textArea = new JTextArea();
 		textArea.setBounds(10, 435, 309, 72);
 		frame.getContentPane().add(textArea);
@@ -68,6 +61,11 @@ public class Privatechat {
 		});
 		btnNewButton.setBounds(329, 436, 95, 71);
 		frame.getContentPane().add(btnNewButton);
+		
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setEditable(false);
+		textArea_1.setBounds(10, 36, 414, 388);
+		frame.getContentPane().add(textArea_1);
 		frame.setVisible(true);
 	}
 }

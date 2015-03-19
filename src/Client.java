@@ -26,7 +26,7 @@ public class Client {
 	private JTextArea generalChat;
 	private CommunicationServer comServer;
 	private JTextField generalChatMessage2;
-	
+	private DefaultListModel<String> usernameListModel;
 
 	/**
 	 * Create the application.
@@ -34,8 +34,8 @@ public class Client {
 	 */
 	public Client(String ipAddress, String clientName) throws IOException {
 		initialize(ipAddress, clientName);
-		comServer = new CommunicationServer(generalChat, ipAddress);
-		comServer.loginToChatroom(clientName);
+		comServer = new CommunicationServer(generalChat, usernameListModel, ipAddress, clientName);
+		comServer.loginChatroom(clientName);
 	}
 
 	/**
@@ -78,8 +78,8 @@ public class Client {
 		generalChatSend.setBounds(328, 447, 130, 35);
 		frame.getContentPane().add(generalChatSend);
 		
-		final DefaultListModel<String> usernameListModel = new DefaultListModel<String>();
-		usernameListModel.addElement(clientName);
+		usernameListModel = new DefaultListModel<String>();
+		//usernameListModel.addElement(clientName);
 				
 		JList<String> usernameList = new JList<String>(usernameListModel);
 		usernameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

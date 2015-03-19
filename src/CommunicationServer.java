@@ -1,3 +1,5 @@
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JTextArea;
 
 import java.io.*;
@@ -8,16 +10,20 @@ public class CommunicationServer {
 	InThread inThread = new InThread();
 	OutThread outThread =  new OutThread();
 	private JTextArea clientGeneralChat;
+	private DefaultListModel<String> clientModel;
 	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 	DatagramSocket clientSocket = new DatagramSocket();
 	InetAddress IPAddress;
+	String clientName;
 	private messageOBJ outMessage = null;
 	
 	
-	public CommunicationServer(JTextArea generalChat, String ipAddress) throws IOException{
+	public CommunicationServer(JTextArea generalChat,  DefaultListModel<String> clientUsernameModel, String ipAddress,  String username) throws IOException{
 	
 		IPAddress  = InetAddress.getByName(ipAddress);
 		clientGeneralChat = generalChat;
+		clientModel = clientUsernameModel;
+		clientName = username;
 		outThread.start();
 		inThread.start();
 		
@@ -33,7 +39,17 @@ public class CommunicationServer {
 		outThread.run();
 	}
 	
-	public void loginToChatroom(String username){
+	public void logoutChatroom(String username){
+		messageOBJ outPacket = new messageOBJ();
+		outPacket.setMessageOBJMessage(null);
+		outPacket.setUsernameOBJMessage(username);
+		outPacket.setTargetOBJMessage(null);
+		outPacket.setTypeOBJMessage("LO");
+		outMessage = outPacket;
+		outThread.run();
+	}
+
+	public void loginChatroom(String username){
 		messageOBJ outPacket = new messageOBJ();
 		outPacket.setMessageOBJMessage(null);
 		outPacket.setUsernameOBJMessage(username);
@@ -69,19 +85,27 @@ public class CommunicationServer {
                 
                 try{
                 	messageOBJ receiveMessage = (messageOBJ) is.readObject();
+
                 	System.out.println("MESSAGE OBJ GOT");
                 	System.out.println("USERNAME: " + receiveMessage.getUsernameOBJMessage());
                 	System.out.println("Message: " + receiveMessage.getMessageOBJMessage());
                 	System.out.println("TARGET: " + receiveMessage.getTargetOBJMessage() );
                 	System.out.println("TYPE: " + receiveMessage.getTypeOBJMessage() );
-                	clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
+                	
+                	if(receiveMessage.getTypeOBJMessage().equals("GC")){
+                		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
+                	} else if(receiveMessage.getTypeOBJMessage().equals("LN") && !(receiveMessage.getUsernameOBJMessage().equals(clientName))){
+                		clientModel.addElement(receiveMessage.getUsernameOBJMessage());
+                	} else if(receiveMessage.getTypeOBJMessage().equals("UL")){
+                		System.out.println("ADDING " + receiveMessage.getMessageOBJMessage());
+                		clientModel.addElement(receiveMessage.getMessageOBJMessage());
+                	}
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();
                 } catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
 		}
 	}

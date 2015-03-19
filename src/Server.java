@@ -3,15 +3,16 @@ import java.net.*;
 import java.util.ArrayList;
 
 public class Server {
-
+	 static ArrayList<clientInformation> clientInfoList = new ArrayList<clientInformation>();
+	 static DatagramSocket serverSocket;
 	public static void main(String args[]) throws Exception
     {
 
-		DatagramSocket serverSocket = new DatagramSocket(9876);
+		serverSocket = new DatagramSocket(9876);
           byte[] receiveData = new byte[1024];
           byte[] sendData = new byte[1024];
           messageOBJ receiveMessageOBJ = new messageOBJ();
-          ArrayList<clientInformation> clientInfoList = new ArrayList<clientInformation>();
+         
 //          clientInformation tempClientInfo = null;
           while(true)
              {
@@ -41,6 +42,13 @@ public class Server {
                 		inClient.setIPCI(IPAddress);
                 		inClient.setPortCI(port);
                     	clientInfoList.add(inClient);
+                    	currentUsersList(inClient);
+            		}else if(receiveMessageOBJ.getTypeOBJMessage().equals("LO")){
+            			for(int i = 0; i < clientInfoList.size(); i++){
+            				if(clientInfoList.get(i).getUsernameCI().equals(receiveMessageOBJ.getUsernameOBJMessage())){
+            					 clientInfoList.remove(i);
+            				}
+            			}
             		}
                 	
                 	// Find client
@@ -94,4 +102,40 @@ public class Server {
                 
              }
     }
+	
+	public static void currentUsersList(clientInformation client){
+		for(int i =0; i < clientInfoList.size(); i++){
+			byte[] sendData = new byte[1024];
+			messageOBJ tempMessage = new messageOBJ();
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			ObjectOutputStream os = null;
+			System.out.println("Sending " + clientInfoList.get(i).getUsernameCI() +" update list to " + client.getUsernameCI());
+			tempMessage.setTargetOBJMessage(null);
+			tempMessage.setTypeOBJMessage("UL");
+			tempMessage.setUsernameOBJMessage(null);
+			tempMessage.setMessageOBJMessage(clientInfoList.get(i).getUsernameCI());
+			try {
+				os = new ObjectOutputStream(outputStream);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				os.writeObject(tempMessage);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			sendData = outputStream.toByteArray();
+			
+			
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, client.getIPCI(), client.getPortCI());
+			try {
+				serverSocket.send(sendPacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
