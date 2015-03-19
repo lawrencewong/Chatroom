@@ -25,6 +25,7 @@ public class Client {
 	private JTextField generalChatMessage;
 	private JTextArea generalChat;
 	private CommunicationServer comServer;
+	private JTextField generalChatMessage2;
 	
 
 	/**
@@ -34,6 +35,10 @@ public class Client {
 	public Client(String ipAddress, String clientName) throws IOException {
 		initialize(ipAddress, clientName);
 		comServer = new CommunicationServer(generalChat, ipAddress);
+		
+		
+		
+		
 	}
 
 	/**
@@ -60,17 +65,16 @@ public class Client {
 		lblUsers.setBounds(468, 13, 46, 14);
 		frame.getContentPane().add(lblUsers);
 		
-		generalChatMessage = new JTextField();
-		generalChatMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		generalChatMessage.setBounds(10, 428, 308, 72);
+		JTextArea generalChatMessage = new JTextArea();
+		generalChatMessage.setLineWrap(true);
+		generalChatMessage.setBounds(10, 428, 308, 65);
 		frame.getContentPane().add(generalChatMessage);
-		generalChatMessage.setColumns(10);
-		
+
 		JButton generalChatSend = new JButton("Send");
 		generalChatSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				sendMessage(generalChatMessage.getText());
+				sendMessage(generalChatMessage.getText(), clientName);
 				generalChatMessage.setText("");
 			}
 		});
@@ -103,8 +107,8 @@ public class Client {
 		
 	}
 	
-	private void sendMessage(String message){
+	private void sendMessage(String message, String clientName){
 		System.out.println(message);
-		comServer.getClientMessage(message);
+		comServer.getClientMessage(message, clientName);
 	}
 }

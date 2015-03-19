@@ -11,7 +11,7 @@ public class CommunicationServer {
 	BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 	DatagramSocket clientSocket = new DatagramSocket();
 	InetAddress IPAddress;
-	private String outMessage = "";
+	private messageOBJ outMessage = null;
 	
 	
 	public CommunicationServer(JTextArea generalChat, String ipAddress) throws IOException{
@@ -22,9 +22,13 @@ public class CommunicationServer {
 		inThread.start();
 		
 	}
-	public void getClientMessage(String message){
+	public void getClientMessage(String message, String username){
 		System.out.println("CS " + message);
-		outMessage = message;
+		messageOBJ outPacket = new messageOBJ();
+		outPacket.setMessageOBJMessage(message);
+		outPacket.setUsernameOBJMessage(username);
+		outPacket.setTargetOBJMessage(null);
+		outMessage = outPacket;
 		outThread.run();
 	}
 	
@@ -34,16 +38,38 @@ public class CommunicationServer {
 			byte[] receiveData = new byte[1024];
 			
 			while(true){
-				
+				System.out.println("Waiting");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-				try {
+                try {
 					clientSocket.receive(receivePacket);
-				} catch (IOException e) {
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                receiveData = receivePacket.getData();
+                ByteArrayInputStream in = new ByteArrayInputStream(receiveData);
+                ObjectInputStream is = null;
+				try {
+					is = new ObjectInputStream(in);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
+                try{
+                	messageOBJ receiveMessage = (messageOBJ) is.readObject();
+                	System.out.println("MESSAGE OBJ GOT");
+                	System.out.println("USERNAME: " + receiveMessage.getUsernameOBJMessage());
+                	System.out.println("Message: " + receiveMessage.getMessageOBJMessage());
+                	System.out.println("TARGET: " + receiveMessage.getTargetOBJMessage() );
+                	clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
+                } catch (ClassNotFoundException e){
+                	e.printStackTrace();
+                } catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String modifiedSentence = new String(receivePacket.getData());
-				clientGeneralChat.append(modifiedSentence+"\n");
+				
 			}
 		}
 	}
@@ -51,12 +77,24 @@ public class CommunicationServer {
 	public class OutThread extends Thread{
 		
 		public void run(){
-			if(!outMessage.equals("")){
-				byte[] sendData = new byte[1024];
-				
-				//String sentence = "Hello Server!";
-
-				sendData = outMessage.getBytes();
+			if(!(outMessage == null)){
+				byte[] sendData;
+				System.out.println("SNEDING TO SERVER");
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				ObjectOutputStream os = null;
+				try {
+					os = new ObjectOutputStream(outputStream);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					os.writeObject(outMessage);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				sendData = outputStream.toByteArray();
 				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
 				try {
 					clientSocket.send(sendPacket);
@@ -64,7 +102,7 @@ public class CommunicationServer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				outMessage = "";
+				outMessage = null;
 			}
 		}
 	}
