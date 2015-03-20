@@ -1,34 +1,23 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
-
 
 public class Client {
 
 	private JFrame frame;
-	private JTextField generalChatMessage;
 	private JTextArea generalChat;
 	private CommunicationServer comServer;
-	private JTextField generalChatMessage2;
 	private DefaultListModel<String> usernameListModel;
 
 	/**
@@ -53,14 +42,11 @@ public class Client {
 		frame.getContentPane().setLayout(null);
 		
 		frame.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
                 comServer.logoutChatroom(clientName);
             	System.exit(0);
             }
-
-
         });
 		
 		JLabel lblChatroom = new JLabel("The Chatroom");
@@ -68,6 +54,7 @@ public class Client {
 		frame.getContentPane().add(lblChatroom);
 		
 		generalChat = new JTextArea("");
+		generalChat.setLineWrap(true);
 		generalChat.setEditable(false);
 		generalChat.setBounds(10, 49, 448, 368);
 		frame.getContentPane().add(generalChat);
@@ -84,16 +71,16 @@ public class Client {
 		JButton generalChatSend = new JButton("Send");
 		generalChatSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				sendMessage(generalChatMessage.getText(), clientName, null, "GC");
-				generalChatMessage.setText("");
+				if(generalChatMessage.getText().trim().length() > 0){
+					sendMessage(generalChatMessage.getText(), clientName, null, "GC");
+					generalChatMessage.setText("");
+				}
 			}
 		});
 		generalChatSend.setBounds(328, 447, 130, 35);
 		frame.getContentPane().add(generalChatSend);
 		
 		usernameListModel = new DefaultListModel<String>();
-		//usernameListModel.addElement(clientName);
 				
 		JList<String> usernameList = new JList<String>(usernameListModel);
 		usernameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -107,7 +94,7 @@ public class Client {
 		JButton btnNewButton = new JButton("Send Private Message");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(usernameList.getSelectedValue() != null && !(usernameList.getSelectedValue().equals(clientName))){
+				if(usernameList.getSelectedValue() != null && !(usernameList.getSelectedValue().equals(clientName)) && (generalChatMessage.getText().trim().length() > 0)){
 					sendMessage(generalChatMessage.getText(), clientName,  usernameList.getSelectedValue(), "PC");
 					generalChatMessage.setText("");
 				}
@@ -120,7 +107,6 @@ public class Client {
 	}
 	
 	private void sendMessage(String message, String clientName, String targetClient, String messageType){
-		System.out.println(message);
 		if(messageType.equals("PC")){
 			generalChat.append("PRIVATE MESSAGE TO " + targetClient + " - " + message +"\n");
 		}

@@ -1,5 +1,4 @@
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JTextArea;
 
 import java.io.*;
@@ -17,19 +16,15 @@ public class CommunicationServer {
 	String clientName;
 	private messageOBJ outMessage = null;
 	
-	
 	public CommunicationServer(JTextArea generalChat,  DefaultListModel<String> clientUsernameModel, String ipAddress,  String username) throws IOException{
-	
 		IPAddress  = InetAddress.getByName(ipAddress);
 		clientGeneralChat = generalChat;
 		clientModel = clientUsernameModel;
 		clientName = username;
 		outThread.start();
 		inThread.start();
-		
 	}
 	public void getClientMessage(String message, String username, String target, String messageType){
-		System.out.println("CS " + message);
 		messageOBJ outPacket = new messageOBJ();
 		outPacket.setMessageOBJMessage(message);
 		outPacket.setUsernameOBJMessage(username);
@@ -65,12 +60,10 @@ public class CommunicationServer {
 			byte[] receiveData = new byte[1024];
 			
 			while(true){
-				System.out.println("Waiting");
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
 					clientSocket.receive(receivePacket);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
                 receiveData = receivePacket.getData();
@@ -79,18 +72,11 @@ public class CommunicationServer {
 				try {
 					is = new ObjectInputStream(in);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
                 
                 try{
                 	messageOBJ receiveMessage = (messageOBJ) is.readObject();
-
-                	System.out.println("MESSAGE OBJ GOT");
-                	System.out.println("USERNAME: " + receiveMessage.getUsernameOBJMessage());
-                	System.out.println("Message: " + receiveMessage.getMessageOBJMessage());
-                	System.out.println("TARGET: " + receiveMessage.getTargetOBJMessage() );
-                	System.out.println("TYPE: " + receiveMessage.getTypeOBJMessage() );
                 	
                 	if(receiveMessage.getTypeOBJMessage().equals("GC")){
                 		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " - " + receiveMessage.getMessageOBJMessage() +"\n");
@@ -98,7 +84,6 @@ public class CommunicationServer {
                 		clientModel.addElement(receiveMessage.getUsernameOBJMessage());
                 		clientGeneralChat.append(receiveMessage.getUsernameOBJMessage() + " has logged in.\n");
                 	} else if(receiveMessage.getTypeOBJMessage().equals("UL")){
-                		System.out.println("ADDING " + receiveMessage.getMessageOBJMessage());
                 		clientModel.addElement(receiveMessage.getMessageOBJMessage());
                 	} else if (receiveMessage.getTypeOBJMessage().equals("LO")){
                 		clientModel.removeElement(receiveMessage.getUsernameOBJMessage());
@@ -109,7 +94,6 @@ public class CommunicationServer {
                 } catch (ClassNotFoundException e){
                 	e.printStackTrace();
                 } catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -121,19 +105,16 @@ public class CommunicationServer {
 		public void run(){
 			if(!(outMessage == null)){
 				byte[] sendData;
-				System.out.println("SNEDING TO SERVER");
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				ObjectOutputStream os = null;
 				try {
 					os = new ObjectOutputStream(outputStream);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
 					os.writeObject(outMessage);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				sendData = outputStream.toByteArray();
